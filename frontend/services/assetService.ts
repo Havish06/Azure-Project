@@ -39,9 +39,7 @@ export const assetService = {
   },
 
   updateStatus: async (id: number, status: AssetStatus): Promise<Asset> => {
-    const { data } = await apiClient.patch<Asset>(`/assets/${id}/status`, JSON.stringify(status), {
-      headers: { "Content-Type": "application/json" },
-    });
+    const { data } = await apiClient.patch<Asset>(`/assets/${id}/status`, { status });
     return data;
   },
 

@@ -1,6 +1,7 @@
 using ConstructionAssetManagement.Data;
 using ConstructionAssetManagement.DTOs;
 using ConstructionAssetManagement.Models;
+using ConstructionAssetManagement.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -113,12 +114,12 @@ public class AssetsController : ControllerBase
 
     // PATCH /api/assets/{id}/status  (Site Engineer can update status)
     [HttpPatch("{id:int}/status")]
-    public async Task<ActionResult<AssetResponseDto>> UpdateStatus(int id, [FromBody] AssetStatus status)
+    public async Task<ActionResult<AssetResponseDto>> UpdateStatus(int id, [FromBody] StatusUpdateDto dto)
     {
         var asset = await _db.Assets.FindAsync(id);
         if (asset == null) return NotFound(new { error = "Asset not found." });
 
-        asset.Status = status;
+        asset.Status = dto.Status;
         asset.UpdatedAt = DateTime.UtcNow;
         await _db.SaveChangesAsync();
 
@@ -130,8 +131,17 @@ public class AssetsController : ControllerBase
     [Authorize(Policy = "AdministratorOnly")]
     public async Task<IActionResult> Delete(int id)
     {
-        var asset = await _db.Assets.FindAsync(id);
+        var asset = await _db.Assets
+            .Include(a => a.Documents)
+            .FirstOrDefaultAsync(a => a.AssetId == id);
         if (asset == null) return NotFound(new { error = "Asset not found." });
+
+        // Clean up associated blobs from Azure Storage before removing the asset
+        var blobService = HttpContext.RequestServices.GetRequiredService<IBlobStorageService>();
+        foreach (var doc in asset.Documents)
+        {
+            await blobService.DeleteFileAsync(doc.BlobUrl);
+        }
 
         _db.Assets.Remove(asset);
         await _db.SaveChangesAsync();

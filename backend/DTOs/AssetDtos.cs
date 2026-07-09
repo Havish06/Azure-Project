@@ -40,6 +40,11 @@ public class AssetResponseDto
     };
 }
 
+public class StatusUpdateDto
+{
+    public AssetStatus Status { get; set; }
+}
+
 public class DashboardSummaryDto
 {
     public int TotalAssets { get; set; }

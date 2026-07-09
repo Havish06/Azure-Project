@@ -1,19 +1,36 @@
 "use client";
 
-import { useIsAuthenticated } from "@azure/msal-react";
+import { useIsAuthenticated, useMsal } from "@azure/msal-react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { Sidebar } from "./Sidebar";
 
+function LoadingScreen() {
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-slate-50">
+      <div className="flex flex-col items-center gap-3">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-amber-500 border-t-transparent" />
+        <p className="text-sm text-slate-400">Loading…</p>
+      </div>
+    </div>
+  );
+}
+
 export function AppShell({ title, children }: { title: string; children: React.ReactNode }) {
   const isAuthenticated = useIsAuthenticated();
+  const { inProgress } = useMsal();
   const router = useRouter();
 
   useEffect(() => {
-    if (!isAuthenticated) router.replace("/");
-  }, [isAuthenticated, router]);
+    // Only redirect to login if MSAL is idle (not handling a redirect) AND user is not authenticated.
+    // This prevents redirect loops during MSAL redirect processing.
+    if (!isAuthenticated && inProgress === "none") {
+      router.replace("/");
+    }
+  }, [isAuthenticated, inProgress, router]);
 
-  if (!isAuthenticated) return null;
+  // Show loading while MSAL is still processing (e.g. handling redirect callback)
+  if (!isAuthenticated) return <LoadingScreen />;
 
   return (
     <div className="min-h-screen bg-slate-50">

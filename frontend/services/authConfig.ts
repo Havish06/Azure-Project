@@ -1,5 +1,8 @@
 import { Configuration, PopupRequest } from "@azure/msal-browser";
 
+const useSecureCookies =
+  typeof window !== "undefined" && window.location.protocol === "https:";
+
 // Values are supplied via .env.local (see .env.local.example)
 export const msalConfig: Configuration = {
   auth: {
@@ -9,7 +12,8 @@ export const msalConfig: Configuration = {
   },
   cache: {
     cacheLocation: "sessionStorage",
-    storeAuthStateInCookie: false,
+    storeAuthStateInCookie: useSecureCookies,
+    secureCookies: useSecureCookies,
   },
 };
 
