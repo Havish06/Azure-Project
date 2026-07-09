@@ -1,0 +1,25 @@
+language: en
+
+reviews:
+  profile: assertive
+
+  high_level_summary: true
+  poem: false
+  review_status: true
+  collapse_walkthrough: false
+
+  auto_review:
+    enabled: true
+
+  path_filters:
+    - "!**/*.md"
+    - "!LICENSE"
+
+chat:
+  auto_reply: true
+
+knowledge_base:
+  learnings:
+    scope: auto
+
+early_access: false
