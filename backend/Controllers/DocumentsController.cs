@@ -87,7 +87,7 @@ public class DocumentsController : ControllerBase
 
     // DELETE /api/documents/{id}  (Administrator only)
     [HttpDelete("{id:int}")]
-    [Authorize(Policy = "AdministratorOnly")]
+    [Authorize]
     public async Task<IActionResult> Delete(int id)
     {
         var doc = await _db.Documents.FindAsync(id);

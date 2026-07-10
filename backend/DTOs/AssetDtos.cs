@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using ConstructionAssetManagement.Models;
 
 namespace ConstructionAssetManagement.DTOs;
@@ -9,6 +10,7 @@ public class AssetCreateDto
     public DateTime PurchaseDate { get; set; }
     public string Site { get; set; } = string.Empty;
     public string? AssignedEngineer { get; set; }
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public AssetStatus Status { get; set; } = AssetStatus.Available;
 }
 
@@ -42,6 +44,7 @@ public class AssetResponseDto
 
 public class StatusUpdateDto
 {
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public AssetStatus Status { get; set; }
 }
 

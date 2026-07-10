@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using ConstructionAssetManagement.Models;
 
 namespace ConstructionAssetManagement.DTOs;
@@ -8,6 +9,7 @@ public class MaintenanceCreateDto
     public DateTime LastService { get; set; }
     public DateTime NextService { get; set; }
     public string? Notes { get; set; }
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public MaintenanceStatus Status { get; set; } = MaintenanceStatus.Scheduled;
 }
 
@@ -16,6 +18,7 @@ public class MaintenanceUpdateDto
     public DateTime LastService { get; set; }
     public DateTime NextService { get; set; }
     public string? Notes { get; set; }
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public MaintenanceStatus Status { get; set; }
 }
 

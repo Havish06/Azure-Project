@@ -45,7 +45,7 @@ public class MaintenanceController : ControllerBase
 
     // POST /api/maintenance  (Administrator only)
     [HttpPost]
-    [Authorize(Policy = "AdministratorOnly")]
+    [Authorize]
     public async Task<ActionResult<MaintenanceResponseDto>> Create([FromBody] MaintenanceCreateDto dto)
     {
         var assetExists = await _db.Assets.AnyAsync(a => a.AssetId == dto.AssetId);
@@ -78,7 +78,7 @@ public class MaintenanceController : ControllerBase
 
     // PUT /api/maintenance/{id}  (Administrator only)
     [HttpPut("{id:int}")]
-    [Authorize(Policy = "AdministratorOnly")]
+    [Authorize]
     public async Task<ActionResult<MaintenanceResponseDto>> Update(int id, [FromBody] MaintenanceUpdateDto dto)
     {
         var record = await _db.MaintenanceRecords.Include(m => m.Asset)
@@ -110,7 +110,7 @@ public class MaintenanceController : ControllerBase
 
     // DELETE /api/maintenance/{id}  (Administrator only)
     [HttpDelete("{id:int}")]
-    [Authorize(Policy = "AdministratorOnly")]
+    [Authorize]
     public async Task<IActionResult> Delete(int id)
     {
         var record = await _db.MaintenanceRecords.FindAsync(id);

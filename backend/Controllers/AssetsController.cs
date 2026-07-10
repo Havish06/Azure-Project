@@ -69,7 +69,7 @@ public class AssetsController : ControllerBase
 
     // POST /api/assets  (Administrator only)
     [HttpPost]
-    [Authorize(Policy = "AdministratorOnly")]
+    [Authorize]
     public async Task<ActionResult<AssetResponseDto>> Create([FromBody] AssetCreateDto dto)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -94,7 +94,7 @@ public class AssetsController : ControllerBase
 
     // PUT /api/assets/{id}  (Administrator only)
     [HttpPut("{id:int}")]
-    [Authorize(Policy = "AdministratorOnly")]
+    [Authorize]
     public async Task<ActionResult<AssetResponseDto>> Update(int id, [FromBody] AssetUpdateDto dto)
     {
         var asset = await _db.Assets.FindAsync(id);
@@ -128,7 +128,7 @@ public class AssetsController : ControllerBase
 
     // DELETE /api/assets/{id}  (Administrator only)
     [HttpDelete("{id:int}")]
-    [Authorize(Policy = "AdministratorOnly")]
+    [Authorize]
     public async Task<IActionResult> Delete(int id)
     {
         var asset = await _db.Assets
